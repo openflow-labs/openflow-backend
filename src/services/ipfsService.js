@@ -14,6 +14,8 @@ async function uploadFile(json) {
 
 	const cid = response.data.Hash
 
+	console.log(`Uploaded metadata to IPFS with CID: ${cid}`)
+
 	return cid
 }
 
