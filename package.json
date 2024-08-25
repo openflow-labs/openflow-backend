@@ -1,0 +1,22 @@
+{
+  "name": "openflow-backend",
+  "version": "1.0.0",
+  "description": "- Get emails - Generate proof of sender and extracted data - Post data to IPFS - Post CID onchain",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.5",
+    "circom": "^0.5.46",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.2",
+    "express": "^4.19.2",
+    "ipfs-http-client": "^60.0.1",
+    "nodemailer": "^6.9.14",
+    "snarkjs": "^0.7.4"
+  }
+}
