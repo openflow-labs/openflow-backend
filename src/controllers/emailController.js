@@ -10,21 +10,16 @@ export default async function processEmail(req, res) {
         const fileBuffer = fs.readFileSync('example.eml');
         const parsedEmail = await emailParser(fileBuffer);
 
-        // Parse the .eml file
         const proof = null
         const { text } = parsedEmail;
         const amount = text.match(/Total acreditado en tu cuenta: \$ ([0|1|2|3|4|5|6|7|8|9|,]*)/);
+        const referenceId = text.match(/Referencia de pago:\n([0|1|2|3|4|5|6|7|8|9|\/|:]*)/);
         let date = text.match(/Fecha:\n([0|1|2|3|4|5|6|7|8|9|\/| |:]*)\n/);
-        
         if (date) {
             const [day, month, year, time] = date[1].split(/[/ ]/);
             const dateFormat = new Date(`${year}-${month}-${day}T${time}`);
-            date = dateFormat.getTime() // Math.floor(dateFormat.getTime() / 1000);
-        } else {
-            date = null;
+            date = dateFormat.getTime()
         }
-
-        const referenceId = text.match(/Referencia de pago:\n([0|1|2|3|4|5|6|7|8|9|\/|:]*)/);
         
         // const { proof, publicData } = await generateProof(fileBuffer);
         const proofAndData = {
@@ -53,8 +48,8 @@ export default async function processEmail(req, res) {
                     }
                 ]
         };
-        const jsonData = JSON.stringify(proofAndData);
-        const ipfsHash = await uploadFile(jsonData);
+
+        const ipfsHash = await uploadFile(JSON.stringify(proofAndData));
 
         const blockchainTx = await sendCID(ipfsHash);
 
