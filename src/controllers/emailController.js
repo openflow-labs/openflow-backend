@@ -5,6 +5,15 @@ import { sendCID } from '../services/ethersService.js';
 // import { generateProof } from '../services/circomService';
 
 export default async function processEmail(req, res) {
+
+    const images = [
+        "Qma4ZNXVfsikh3S1aJtJ8K9BUDLjrpFKR2GwGSc2j18kZU",
+        "QmaAJbDv1FEi7rt8yLT51mNzGKF7vZxBEDwBTiZpAHd3Kp",
+        "QmamJKzRWpE1uzS3d5BFmPxniYaoaV3KisUBgsApimg7Th",
+        "QmRTrGiK7eykmLaynAoZjBvgexga5CBAdhGHAQQ36z6q9Z",
+        "QmUDs1mCStach2fwNMea8jqGBFSBeN7jN1BHN6p6W7ThU1"
+    ]
+
     try {
         // const fileBuffer = req.file.buffer; // .eml file buffer
         const fileBuffer = fs.readFileSync('example.eml');
@@ -23,10 +32,10 @@ export default async function processEmail(req, res) {
         
         // const { proof, publicData } = await generateProof(fileBuffer);
         const proofAndData = {
-            "image": "https://www.hospitalitalianorosario.com.ar/images/abt_img.jpg",
-            "name": "Proof of Payment Test #1",
-            "description": "Showing the proof of payment for a test",
-            "external_url": "https://www.instagram.com/santimaratea",
+            "image": "ipfs://"+images[(i + referenceId) % images.length],
+            "name": `Contribution #${i+1} - Independiente`,
+            "description": "This is a proof of payment for a contribution to the Independiente crowdfunding campaign.",
+            "external_url": "https://github.com/openflow-labs",
             "attributes": 
                 [
                     {
@@ -48,9 +57,7 @@ export default async function processEmail(req, res) {
                     }
                 ]
         };
-
         const ipfsHash = await uploadFile(JSON.stringify(proofAndData));
-
         const blockchainTx = await sendCID(ipfsHash);
 
         res.json({ ipfsHash, proofAndData, blockchainTx });
