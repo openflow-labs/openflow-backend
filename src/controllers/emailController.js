@@ -13,13 +13,13 @@ export default async function processEmail(req, res) {
         // Parse the .eml file
         const proof = null
         const { text } = parsedEmail;
-        const amount = text.match(/Amount: (\d+)/);
-        const date = text.match(/Date: (\d+)/);
-        const referenceId = text.match(/Reference ID: (\d+)/);
+        const amount = text.match(/Total acreditado en tu cuenta: \$ ([0|1|2|3|4|5|6|7|8|9|,]*)/);
+        const date = text.match(/Fecha:\n([0|1|2|3|4|5|6|7|8|9|\/| |:]*)\n/);
+        const referenceId = text.match(/Referencia de pago:\n([0|1|2|3|4|5|6|7|8|9|\/|:]*)/);
         const publicData = {
-            amount: amount ? amount : null,
-            date: date ? date : null,
-            referenceId: referenceId ? referenceId : null
+            amount: amount ? amount[1] : null,
+            date: date ? date[1] : null,
+            referenceId: referenceId ? referenceId[1] : null
         }
         
         // const { proof, publicData } = await generateProof(fileBuffer);
@@ -30,7 +30,7 @@ export default async function processEmail(req, res) {
         const jsonData = JSON.stringify(proofAndData);
         const ipfsHash = await uploadFile(jsonData);
 
-        const blockchainTx = await sendCID(ipfsHash);
+        const blockchainTx = null; //await sendCID(ipfsHash);
 
         res.json({ ipfsHash, proofAndData, blockchainTx });
     } catch (error) {
