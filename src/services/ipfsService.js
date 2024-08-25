@@ -5,10 +5,10 @@ dotenv.config()
 
 // Receives json as JSON
 // Returns cid as string
-async function uploadFile(json) {
+export async function uploadFile(json) {
 	const response = await lighthouse.uploadText(
 		json,
-		process.env.LIGHTHOUSE_API,
+		process.env.LIGHTHOUSE_API_KEY,
 		'metadata.json'
 	)
 
@@ -18,5 +18,3 @@ async function uploadFile(json) {
 
 	return cid
 }
-
-export default { uploadFile }

@@ -1,18 +1,16 @@
 import fs from 'fs';
 import { simpleParser as emailParser } from 'mailparser';
-import uploadFile from '../services/ipfsService.js';
-import sendCID from '../services/ethersService.js';
+import { uploadFile } from '../services/ipfsService.js';
+import { sendCID } from '../services/ethersService.js';
 // import { generateProof } from '../services/circomService';
 
 export default async function processEmail(req, res) {
     try {
         // const fileBuffer = req.file.buffer; // .eml file buffer
         const fileBuffer = fs.readFileSync('example.eml');
-
-        // Parse the .eml file
         const parsedEmail = await emailParser(fileBuffer);
 
-        // const { proof, publicData } = await generateProof(fileBuffer);
+        // Parse the .eml file
         const proof = null
         const { text } = parsedEmail;
         const amount = text.match(/Amount: (\d+)/);
@@ -23,7 +21,8 @@ export default async function processEmail(req, res) {
             date: date ? date : null,
             referenceId: referenceId ? referenceId : null
         }
-
+        
+        // const { proof, publicData } = await generateProof(fileBuffer);
         const proofAndData = {
             proof: proof,
             publicSignals: publicData

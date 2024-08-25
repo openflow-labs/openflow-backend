@@ -12,14 +12,14 @@ const provider = new ethers.JsonRpcProvider(ethereum.rpcUrl);
 // const postFunction = ethereum.contractFunction;
 // const readFunction = ethereum.readFunction;
 
-async function sendCID(cid) {
+export async function sendCID(cid) {
   // return await contract[postFunction](cid);
   return cid;
 }
 
-async function readCIDs() {
+export async function readCIDs() {
   const data = ""// await contract[readFunction];
   return data;
 }
 
-export default { sendCID, readCIDs };
+// export default { sendCID, readCIDs };

@@ -1,16 +1,16 @@
-const snarkjs = require('snarkjs');
-const { exec } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import { wtns, groth16 } from 'snarkjs';
+import { exec } from 'child_process';
+import fs from 'fs';
+import { join } from 'path';
 
 async function generateProof(input) {
-  const circuitWasmPath = path.join(__dirname, '..', 'circuits', 'circuit.wasm');
-  const zkeyPath = path.join(__dirname, '..', 'circuits', 'circuit_final.zkey');
+  const circuitWasmPath = join(__dirname, '..', 'circuits', 'circuit.wasm');
+  const zkeyPath = join(__dirname, '..', 'circuits', 'circuit_final.zkey');
 
-  const witness = await snarkjs.wtns.calculate(input, circuitWasmPath);
-  const { proof, publicSignals } = await snarkjs.groth16.prove(zkeyPath, witness);
+  const witness = await wtns.calculate(input, circuitWasmPath);
+  const { proof, publicSignals } = await groth16.prove(zkeyPath, witness);
 
   return { proof, publicSignals };
 }
 
-module.exports = { generateProof };
+export default { generateProof };
