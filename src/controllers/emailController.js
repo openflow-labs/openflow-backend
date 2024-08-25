@@ -1,10 +1,10 @@
 import fs from 'fs';
 import { simpleParser as emailParser } from 'mailparser';
-import { uploadFile } from '../services/ipfsService';
-import { sendCID } from '../services/ethersService';
+import uploadFile from '../services/ipfsService.js';
+import sendCID from '../services/ethersService.js';
 // import { generateProof } from '../services/circomService';
 
-export async function processEmail(req, res) {
+export default async function processEmail(req, res) {
     try {
         // const fileBuffer = req.file.buffer; // .eml file buffer
         const fileBuffer = fs.readFileSync('example.eml');
@@ -28,8 +28,8 @@ export async function processEmail(req, res) {
             proof: proof,
             publicSignals: publicData
         };
-        const jsonBuffer = Buffer.from(JSON.stringify(proofAndData));
-        const ipfsHash = await uploadFile(jsonBuffer);
+        const jsonData = JSON.stringify(proofAndData);
+        const ipfsHash = await uploadFile(jsonData);
 
         const blockchainTx = await sendCID(ipfsHash);
 

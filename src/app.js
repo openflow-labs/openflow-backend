@@ -1,10 +1,10 @@
-const express = require('express');
-const emailRoutes = require('./routes/emailRoutes');
+import express, { json } from 'express';
+import { router } from './routes/emailRoutes.js';
 
 const app = express();
 
-app.use(express.json());
+app.use(json());
 
-app.use('/api/email', emailRoutes);
+app.use('/api/email', router);
 
-module.exports = app;
+export default app ;

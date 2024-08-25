@@ -1,22 +1,24 @@
 import { ethers } from 'ethers';
-import { ethereum } from '../config/config';
+import config from '../config/config.js';
 
-const provider = new ethers.providers.JsonRpcProvider(ethereum.rpcUrl);
-const wallet = new ethers.Wallet(ethereum.privateKey, provider);
+const ethereum = config.ethereum;
+const provider = new ethers.JsonRpcProvider(ethereum.rpcUrl);
+// const wallet = new ethers.Wallet(ethereum.privateKey, provider);
 
-const contractAddress = ethereum.contractAddress;
-const contract = new ethers.Contract(contractAddress, ethereum.contractAbi, wallet);
-contract.connect(wallet);
+// const contractAddress = ethereum.contractAddress;
+// const contract = new ethers.Contract(contractAddress, ethereum.contractAbi, wallet);
+// contract.connect(wallet);
 
-const postFunction = ethereum.contractFunction;
-const readFunction = ethereum.readFunction;
+// const postFunction = ethereum.contractFunction;
+// const readFunction = ethereum.readFunction;
 
 async function sendCID(cid) {
-  return await contract[postFunction](cid);
+  // return await contract[postFunction](cid);
+  return cid;
 }
 
 async function readCIDs() {
-  const data = await contract[readFunction];
+  const data = ""// await contract[readFunction];
   return data;
 }
 
