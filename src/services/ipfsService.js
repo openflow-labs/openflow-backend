@@ -1,12 +1,22 @@
-import config from '../config/config.js';
+import lighthouse from '@lighthouse-web3/sdk'
+import dotenv from 'dotenv'
 
-async function uploadFile(fileBuffer) {
-    const { create } = await import('ipfs-http-client');
-    const ipfs = create({ url: config.ipfs.apiUrl });
-  
-    const { path } = await ipfs.add(fileBuffer);
-    return path;
-  }
-  
-  export default { uploadFile };
-  
+dotenv.config()
+
+// Receives json as JSON
+// Returns cid as string
+async function uploadFile(json) {
+	const response = await lighthouse.uploadText(
+		json,
+		process.env.LIGHTHOUSE_API,
+		'metadata.json'
+	)
+
+	const cid = response.data.Hash
+
+	console.log(`Uploaded metadata to IPFS with CID: ${cid}`)
+
+	return cid
+}
+
+export default { uploadFile }
