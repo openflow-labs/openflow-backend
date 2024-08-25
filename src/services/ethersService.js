@@ -1,21 +1,23 @@
-const { ethers } = require('ethers');
-const config = require('../config/config');
+import { ethers } from 'ethers';
+import { ethereum } from '../config/config';
 
-const provider = new ethers.JsonRpcProvider(config.ethereum.rpcUrl);
-const wallet = new ethers.Wallet(config.ethereum.privateKey, provider);
+const provider = new ethers.providers.JsonRpcProvider(ethereum.rpcUrl);
+const wallet = new ethers.Wallet(ethereum.privateKey, provider);
 
-async function sendTransaction(to, value) {
-  const tx = await wallet.sendTransaction({
-    to,
-    value: ethers.parseEther(value),
-  });
-  return tx;
+const contractAddress = ethereum.contractAddress;
+const contract = new ethers.Contract(contractAddress, ethereum.contractAbi, wallet);
+contract.connect(wallet);
+
+const postFunction = ethereum.contractFunction;
+const readFunction = ethereum.readFunction;
+
+async function sendCID(cid) {
+  return await contract[postFunction](cid);
 }
 
-async function readOnChainData(contractAddress, abi, method, ...args) {
-  const contract = new ethers.Contract(contractAddress, abi, wallet);
-  const data = await contract[method](...args);
+async function readCIDs() {
+  const data = await contract[readFunction];
   return data;
 }
 
-module.exports = { sendTransaction, readOnChainData };
+export default { sendCID, readCIDs };

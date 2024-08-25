@@ -1,14 +1,8 @@
 require('dotenv').config();
 
-module.exports = {
+module.exports = config = {
   ipfs: {
     apiUrl: process.env.IPFS_API_URL,
-  },
-  email: {
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
   },
   ethereum: {
     privateKey: process.env.ETH_PRIVATE_KEY,
