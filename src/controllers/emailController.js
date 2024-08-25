@@ -14,23 +14,49 @@ export default async function processEmail(req, res) {
         const proof = null
         const { text } = parsedEmail;
         const amount = text.match(/Total acreditado en tu cuenta: \$ ([0|1|2|3|4|5|6|7|8|9|,]*)/);
-        const date = text.match(/Fecha:\n([0|1|2|3|4|5|6|7|8|9|\/| |:]*)\n/);
-        const referenceId = text.match(/Referencia de pago:\n([0|1|2|3|4|5|6|7|8|9|\/|:]*)/);
-        const publicData = {
-            amount: amount ? amount[1] : null,
-            date: date ? date[1] : null,
-            referenceId: referenceId ? referenceId[1] : null
+        let date = text.match(/Fecha:\n([0|1|2|3|4|5|6|7|8|9|\/| |:]*)\n/);
+        
+        if (date) {
+            const [day, month, year, time] = date[1].split(/[/ ]/);
+            const dateFormat = new Date(`${year}-${month}-${day}T${time}`);
+            date = dateFormat.getTime() // Math.floor(dateFormat.getTime() / 1000);
+        } else {
+            date = null;
         }
+
+        const referenceId = text.match(/Referencia de pago:\n([0|1|2|3|4|5|6|7|8|9|\/|:]*)/);
         
         // const { proof, publicData } = await generateProof(fileBuffer);
         const proofAndData = {
-            proof: proof,
-            publicSignals: publicData
+            "image": "https://www.hospitalitalianorosario.com.ar/images/abt_img.jpg",
+            "name": "Proof of Payment Test #1",
+            "description": "Showing the proof of payment for a test",
+            "external_url": "https://www.instagram.com/santimaratea",
+            "attributes": 
+                [
+                    {
+                        "trait_type": "Proof", 
+                        "value": proof
+                    },
+                    {
+                        "trait_type": "Amount", 
+                        "value": amount ? amount[1] : null
+                    },
+                    {
+                        "display_type": "date", 
+                        "trait_type": "Date", 
+                        "value": date ? date : null
+                    },
+                    {
+                        "trait_type": "Reference ID", 
+                        "value": referenceId ? referenceId[1] : null
+                    }
+                ]
         };
         const jsonData = JSON.stringify(proofAndData);
         const ipfsHash = await uploadFile(jsonData);
 
-        const blockchainTx = null; //await sendCID(ipfsHash);
+        const blockchainTx = await sendCID(ipfsHash);
 
         res.json({ ipfsHash, proofAndData, blockchainTx });
     } catch (error) {

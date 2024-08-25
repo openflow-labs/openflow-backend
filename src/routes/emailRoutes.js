@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import processEmail from '../controllers/emailController.js';  // Add .js extension
+import processEmail from '../controllers/emailController.js';
 
 const router = Router();
 
