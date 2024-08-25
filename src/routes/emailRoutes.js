@@ -1,8 +1,8 @@
-const express = require('express');
-const { processEmail } = require('../controllers/emailController');
+import { Router } from 'express';
+import processEmail from '../controllers/emailController.js';  // Add .js extension
 
-const router = express.Router();
+const router = Router();
 
 router.post('/upload-email', processEmail);
 
-module.exports = router;
+export { router };
